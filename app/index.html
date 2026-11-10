@@ -1,0 +1,723 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VoxAI | Transcription Studio</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap');
+
+:root {
+    --navy: #071a35;
+    --blue: #1769e0;
+    --light-blue: #eaf3ff;
+    --text: #172b4d;
+    --muted: #75849c;
+    --border: #e3ebf5;
+}
+
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    font-family: 'DM Sans', sans-serif;
+    background: #f4f8fd;
+    color: var(--text);
+}
+
+.topbar {
+    height: 76px;
+    background: white;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 7%;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 21px;
+    font-weight: 800;
+    color: var(--navy);
+}
+
+.logo {
+    width: 40px;
+    height: 40px;
+    border-radius: 13px;
+    background: linear-gradient(135deg,#1477f8,#063d9d);
+    color: white;
+    display: grid;
+    place-items: center;
+    font-size: 20px;
+    box-shadow: 0 5px 15px #1769e044;
+}
+
+.status {
+    color: #148653;
+    background: #e9f8f1;
+    border: 1px solid #c9efdc;
+    padding: 9px 15px;
+    border-radius: 30px;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+main {
+    max-width: 1050px;
+    margin: 55px auto;
+    padding: 0 22px;
+}
+
+.hero { text-align: center; margin-bottom: 36px; }
+
+.eyebrow {
+    color: var(--blue);
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+h1 {
+    font-size: clamp(32px,5vw,47px);
+    letter-spacing: -1.8px;
+    margin: 13px 0;
+    color: var(--navy);
+}
+
+.hero p {
+    color: var(--muted);
+    font-size: 15px;
+    margin: 0;
+}
+
+.panel {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 22px;
+    padding: 30px;
+    box-shadow: 0 15px 45px #173e7010;
+}
+
+.panel-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 22px;
+}
+
+.panel-heading h2 {
+    font-size: 18px;
+    margin: 0;
+}
+
+.panel-heading span {
+    font-size: 12px;
+    color: var(--muted);
+}
+
+.dropzone {
+    border: 2px dashed #b9d3f4;
+    background: linear-gradient(135deg,#f5f9ff,#edf5ff);
+    border-radius: 18px;
+    min-height: 220px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    cursor: pointer;
+    transition: .25s;
+    padding: 25px;
+}
+
+.dropzone:hover, .dropzone.dragover {
+    border-color: var(--blue);
+    background: #e8f2ff;
+    transform: translateY(-2px);
+}
+
+.upload-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 18px;
+    background: #dceaff;
+    color: #1769e0;
+    display: grid;
+    place-items: center;
+    font-size: 27px;
+    margin-bottom: 14px;
+}
+
+.dropzone h3 { margin: 0 0 8px; font-size: 16px; }
+.dropzone p { margin: 0; font-size: 13px; color: var(--muted); }
+
+.browse {
+    color: var(--blue);
+    font-weight: 700;
+}
+
+.file-info {
+    display: none;
+    margin-top: 15px;
+    padding: 13px 16px;
+    background: #f0f6ff;
+    border: 1px solid #d8e8ff;
+    border-radius: 12px;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    font-size: 13px;
+}
+
+.file-info strong { overflow-wrap: anywhere; }
+.file-info button {
+    border: 0;
+    background: none;
+    color: #d14343;
+    cursor: pointer;
+    font-weight: 700;
+}
+
+.settings {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+    margin-top: 24px;
+}
+
+.field label {
+    display: block;
+    font-size: 12px;
+    font-weight: 700;
+    margin-bottom: 9px;
+    color: #53647d;
+}
+
+select {
+    width: 100%;
+    padding: 13px;
+    border: 1px solid var(--border);
+    border-radius: 11px;
+    background: #fbfdff;
+    color: var(--text);
+    font-family: inherit;
+    outline: none;
+}
+
+select:focus { border-color: var(--blue); }
+
+.primary-btn {
+    width: 100%;
+    margin-top: 25px;
+    padding: 16px;
+    border: 0;
+    border-radius: 12px;
+    color: white;
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    background: linear-gradient(100deg,#1769e0,#0846ad);
+    box-shadow: 0 8px 20px #1769e044;
+    transition: .2s;
+}
+
+.primary-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 25px #1769e055;
+}
+
+.primary-btn:disabled { opacity: .55; cursor: not-allowed; }
+
+.progress-area {
+    display: none;
+    margin-top: 22px;
+    background: #f2f7ff;
+    padding: 17px;
+    border-radius: 12px;
+}
+
+.progress-text {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    margin-bottom: 10px;
+    color: #31547f;
+    font-weight: 700;
+}
+
+.progress-track {
+    height: 7px;
+    background: #d9e7f8;
+    border-radius: 20px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    width: 30%;
+    border-radius: 20px;
+    background: linear-gradient(90deg,#1769e0,#53a4ff);
+    animation: loading 1.6s ease-in-out infinite alternate;
+}
+
+@keyframes loading {
+    from { width: 15%; }
+    to { width: 90%; }
+}
+
+.error {
+    display: none;
+    color: #b42318;
+    background: #fff0ef;
+    border: 1px solid #ffd5d1;
+    padding: 14px;
+    border-radius: 10px;
+    margin-top: 17px;
+    font-size: 13px;
+}
+
+.results {
+    display: none;
+    margin-top: 30px;
+}
+
+.result-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    flex-wrap: wrap;
+    margin-bottom: 18px;
+}
+
+.result-top h2 { font-size: 21px; margin: 0; }
+
+.actions { display: flex; gap: 9px; }
+
+.small-btn {
+    background: white;
+    border: 1px solid var(--border);
+    padding: 9px 13px;
+    border-radius: 9px;
+    cursor: pointer;
+    color: #31547f;
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.small-btn:hover { background: var(--light-blue); }
+
+.stats {
+    display: grid;
+    grid-template-columns: repeat(2,1fr);
+    gap: 14px;
+    margin-bottom: 20px;
+}
+
+.stat {
+    padding: 16px;
+    background: #f4f8ff;
+    border: 1px solid #e4edfa;
+    border-radius: 13px;
+}
+
+.stat span {
+    display: block;
+    color: var(--muted);
+    font-size: 11px;
+    margin-bottom: 7px;
+}
+
+.stat strong { color: #174e9c; font-size: 18px; }
+
+.segment {
+    border: 1px solid var(--border);
+    border-radius: 13px;
+    padding: 17px;
+    margin-bottom: 12px;
+    background: white;
+}
+
+.segment-time {
+    color: var(--blue);
+    font-size: 11px;
+    font-weight: 800;
+    margin-bottom: 9px;
+}
+
+.segment-text {
+    font-size: 14px;
+    line-height: 1.7;
+}
+
+details {
+    border-top: 1px solid #edf1f7;
+    margin-top: 13px;
+    padding-top: 11px;
+}
+
+summary {
+    color: #55708f;
+    font-size: 12px;
+    cursor: pointer;
+    font-weight: 700;
+}
+
+.words {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+    margin-top: 12px;
+}
+
+.word {
+    background: #eff5ff;
+    border: 1px solid #dce9fb;
+    padding: 6px 9px;
+    border-radius: 7px;
+    font-size: 11px;
+    color: #31547f;
+}
+
+.word small {
+    display: block;
+    color: #8194ae;
+    margin-top: 3px;
+    font-size: 9px;
+}
+
+footer {
+    text-align: center;
+    color: #9aa8ba;
+    font-size: 11px;
+    padding: 30px;
+}
+
+@media(max-width:650px) {
+    .topbar { padding: 0 18px; }
+    main { margin: 32px auto; }
+    .panel { padding: 19px; }
+    .settings { grid-template-columns: 1fr; }
+    .stats { grid-template-columns: 1fr 1fr; }
+}
+</style>
+</head>
+
+<body>
+
+<header class="topbar">
+    <div class="brand">
+        <div class="logo">✦</div>
+        VoxAI
+    </div>
+    <div class="status">● API Connected</div>
+</header>
+
+<main>
+    <section class="hero">
+        <div class="eyebrow">AI POWERED SPEECH RECOGNITION</div>
+        <h1>Audio to Text, <span style="color:#1769e0">Effortlessly.</span></h1>
+        <p>Transform your audio into accurate text with intelligent timestamps.</p>
+    </section>
+
+    <section class="panel">
+        <div class="panel-heading">
+            <h2>Upload your audio</h2>
+            <span>Step 01 / 02</span>
+        </div>
+
+        <div class="dropzone" id="dropzone">
+            <div class="upload-icon">↑</div>
+            <h3>Drop your audio file here</h3>
+            <p>or <span class="browse">browse files</span> from your device</p>
+            <p style="margin-top:13px;font-size:11px">
+                WAV · MP3 · M4A · FLAC · OGG · WMA
+            </p>
+        </div>
+
+        <input type="file" id="audioFile" accept=".wav,.mp3,.m4a,.flac,.ogg,.wma" hidden>
+
+        <div class="file-info" id="fileInfo">
+            <strong id="fileName"></strong>
+            <button id="removeFile" type="button">Remove ×</button>
+        </div>
+
+        <div class="settings">
+            <div class="field">
+                <label for="language">TRANSCRIPTION LANGUAGE</label>
+                <select id="language">
+                    <option value="">Auto Detect</option>
+                    <option value="en">English</option>
+                    <option value="ur">Urdu</option>
+                    <option value="hi">Hindi</option>
+                    <option value="ar">Arabic</option>
+                </select>
+            </div>
+
+            <div class="field">
+                <label>TRANSCRIPTION ENGINE</label>
+                <select disabled>
+                    <option>Faster-Whisper · Base Model</option>
+                </select>
+            </div>
+        </div>
+
+        <button class="primary-btn" id="transcribeBtn">
+            ✦ &nbsp; Start Transcription
+        </button>
+
+        <div class="progress-area" id="progress">
+            <div class="progress-text">
+                <span>Processing your audio...</span>
+                <span>Please wait</span>
+            </div>
+            <div class="progress-track">
+                <div class="progress-fill"></div>
+            </div>
+        </div>
+
+        <div class="error" id="error"></div>
+    </section>
+
+    <section class="results" id="results">
+        <div class="result-top">
+            <h2>Transcription Results</h2>
+            <div class="actions">
+                <button class="small-btn" id="copyBtn">Copy Text</button>
+                <button class="small-btn" id="downloadBtn">↓ Download JSON</button>
+            </div>
+        </div>
+
+        <div class="stats">
+            <div class="stat">
+                <span>DETECTED LANGUAGE</span>
+                <strong id="detectedLanguage">—</strong>
+            </div>
+            <div class="stat">
+                <span>LANGUAGE CONFIDENCE</span>
+                <strong id="confidence">—</strong>
+            </div>
+        </div>
+
+        <div id="transcript"></div>
+    </section>
+</main>
+
+<footer>VoxAI · Intelligent Audio Transcription Studio</footer>
+
+<script>
+const fileInput = document.getElementById("audioFile");
+const dropzone = document.getElementById("dropzone");
+const fileInfo = document.getElementById("fileInfo");
+const fileName = document.getElementById("fileName");
+const transcribeBtn = document.getElementById("transcribeBtn");
+const progress = document.getElementById("progress");
+const results = document.getElementById("results");
+const errorBox = document.getElementById("error");
+
+let selectedFile = null;
+let latestResult = null;
+
+function selectFile(file) {
+    if (!file) return;
+
+    const allowed = ["wav","mp3","m4a","flac","ogg","wma"];
+    const ext = file.name.split(".").pop().toLowerCase();
+
+    if (!allowed.includes(ext)) {
+        showError("Unsupported file format. Please select a supported audio file.");
+        return;
+    }
+
+    selectedFile = file;
+    fileName.textContent = file.name;
+    fileInfo.style.display = "flex";
+    results.style.display = "none";
+    errorBox.style.display = "none";
+}
+
+dropzone.addEventListener("click", () => fileInput.click());
+
+fileInput.addEventListener("change", e => {
+    selectFile(e.target.files[0]);
+});
+
+dropzone.addEventListener("dragover", e => {
+    e.preventDefault();
+    dropzone.classList.add("dragover");
+});
+
+dropzone.addEventListener("dragleave", () => {
+    dropzone.classList.remove("dragover");
+});
+
+dropzone.addEventListener("drop", e => {
+    e.preventDefault();
+    dropzone.classList.remove("dragover");
+    selectFile(e.dataTransfer.files[0]);
+});
+
+document.getElementById("removeFile").addEventListener("click", () => {
+    selectedFile = null;
+    fileInput.value = "";
+    fileInfo.style.display = "none";
+});
+
+function showError(message) {
+    errorBox.textContent = message;
+    errorBox.style.display = "block";
+}
+
+transcribeBtn.addEventListener("click", async () => {
+    if (!selectedFile) {
+        showError("Please upload an audio file first.");
+        return;
+    }
+
+    errorBox.style.display = "none";
+    results.style.display = "none";
+    progress.style.display = "block";
+    transcribeBtn.disabled = true;
+    transcribeBtn.textContent = "Processing audio...";
+
+    const formData = new FormData();
+    formData.append("file", selectedFile);
+
+    const language = document.getElementById("language").value;
+    const query = language ? "?language=" + encodeURIComponent(language) : "";
+
+    try {
+        const response = await fetch("/transcribe" + query, {
+            method: "POST",
+            body: formData
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.detail || "Transcription failed.");
+        }
+
+        latestResult = data;
+        renderResults(data);
+
+    } catch (error) {
+        showError(error.message || "Something went wrong. Please try again.");
+    } finally {
+        progress.style.display = "none";
+        transcribeBtn.disabled = false;
+        transcribeBtn.innerHTML = "✦ &nbsp; Start Transcription";
+    }
+});
+
+function renderResults(data) {
+    document.getElementById("detectedLanguage").textContent =
+        (data.language || "Unknown").toUpperCase();
+
+    document.getElementById("confidence").textContent =
+        data.language_probability != null
+        ? (data.language_probability * 100).toFixed(1) + "%"
+        : "—";
+
+    const container = document.getElementById("transcript");
+    container.innerHTML = "";
+
+    (data.segments || []).forEach((segment, index) => {
+        const card = document.createElement("div");
+        card.className = "segment";
+
+        const time = document.createElement("div");
+        time.className = "segment-time";
+        time.textContent =
+            formatTime(segment.start) + " — " + formatTime(segment.end);
+
+        const text = document.createElement("div");
+        text.className = "segment-text";
+        text.textContent = segment.text;
+
+        card.append(time, text);
+
+        if (segment.words && segment.words.length) {
+            const details = document.createElement("details");
+            const summary = document.createElement("summary");
+            summary.textContent = "View word-level timestamps (" +
+                segment.words.length + " words)";
+
+            const words = document.createElement("div");
+            words.className = "words";
+
+            segment.words.forEach(word => {
+                const item = document.createElement("div");
+                item.className = "word";
+
+                const label = document.createElement("div");
+                label.textContent = word.word;
+
+                const timing = document.createElement("small");
+                timing.textContent =
+                    formatTime(word.start) + " – " + formatTime(word.end);
+
+                item.append(label, timing);
+                words.appendChild(item);
+            });
+
+            details.append(summary, words);
+            card.appendChild(details);
+        }
+
+        container.appendChild(card);
+    });
+
+    results.style.display = "block";
+    results.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+function formatTime(seconds) {
+    const min = Math.floor(seconds / 60);
+    const sec = (seconds % 60).toFixed(2);
+    return String(min).padStart(2,"0") + ":" + String(sec).padStart(5,"0");
+}
+
+document.getElementById("copyBtn").addEventListener("click", async () => {
+    if (!latestResult) return;
+
+    const text = (latestResult.segments || [])
+        .map(segment => segment.text)
+        .join(" ");
+
+    await navigator.clipboard.writeText(text);
+    document.getElementById("copyBtn").textContent = "Copied ✓";
+
+    setTimeout(() => {
+        document.getElementById("copyBtn").textContent = "Copy Text";
+    }, 1800);
+});
+
+document.getElementById("downloadBtn").addEventListener("click", () => {
+    if (!latestResult) return;
+
+    const blob = new Blob(
+        [JSON.stringify(latestResult, null, 2)],
+        { type: "application/json" }
+    );
+
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "transcription.json";
+    link.click();
+    URL.revokeObjectURL(url);
+});
+</script>
+
+</body>
+</html>
